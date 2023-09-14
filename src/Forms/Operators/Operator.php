@@ -6,16 +6,15 @@ use Illuminate\Database\Eloquent\Builder;
 
 abstract class Operator
 {
+    abstract public static function getKey(): string;
 
-    abstract static public function getKey(): string;
+    abstract public static function getLabel(): string;
 
-    abstract static public function getLabel(): string;
+    abstract public static function scopeToEloquent(Builder $query, $table, $field, array $values): Builder;
 
-    abstract static public function scopeToEloquent(Builder $query, $table, $field, array $values): Builder;
+    abstract public static function scopeToSQL($table, $field, array $values): string;
 
-    abstract static public function scopeToSQL($table, $field, array $values): string;
-
-    static public function getHint(): string
+    public static function getHint(): string
     {
         return '';
     }

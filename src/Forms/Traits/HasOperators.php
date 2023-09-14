@@ -4,7 +4,7 @@ namespace Thiktak\FilamentSQLNestedBuilderForm\Forms\Traits;
 
 use Thiktak\FilamentNestedBuilderForm\Forms\Operators\Operator;
 
-trait  HasOperators
+trait HasOperators
 {
     public array $operators = [];
 
@@ -13,6 +13,7 @@ trait  HasOperators
         if (is_subclass_of($operator, Operator::class)) {
             $this->operators[$operator::getKey()] = $operator;
         }
+
         return $this;
     }
 

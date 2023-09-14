@@ -21,42 +21,41 @@ class SQLNestedBuilder extends NestedBuilder
 {
     use HasOperators;
 
-    public array | Arrayable | string | Closure | null  $signOptions = null;
+    public array | Arrayable | string | Closure | null $signOptions = null;
 
-    public Field | Closure | null  $fieldComponent = null;
+    public Field | Closure | null $fieldComponent = null;
 
-
-    static public function make(string $name): static
+    public static function make(string $name): static
     {
         return parent::make($name)
             ->loadDefinition();
     }
 
-    public function signOptions(array | Arrayable | string | Closure | null  $signOptions): static
+    public function signOptions(array | Arrayable | string | Closure | null $signOptions): static
     {
         $this->signOptions = $signOptions;
+
         return $this;
     }
 
     public function getSignOptions(NestedSubBuilder $builder): array
     {
         return (array) $this->evaluate($this->signOptions, [
-            'builder' => $builder
+            'builder' => $builder,
         ]);
     }
-
-
 
     public function fieldComponent(Field | Closure | null $fieldComponent): static
     {
         $this->fieldComponent = $fieldComponent;
+
         return $this;
     }
 
     public function getFieldComponent(NestedSubBuilder $builder): mixed
     {
         return $this->evaluate($this->fieldComponent, [
-            'builder' => $builder
+            'builder' => $builder,
         ]);
     }
 
@@ -75,16 +74,13 @@ class SQLNestedBuilder extends NestedBuilder
 
         $this->fieldComponent(fn () => TextInput::make('field'));
 
-
         // Return default configuration
         return $this
             ->nestedConfiguration(
-                fn (NestedSubBuilder $builder, NestedBuilder $parent) =>
-                $this->defaultNestedConfiguration($builder)
+                fn (NestedSubBuilder $builder, NestedBuilder $parent) => $this->defaultNestedConfiguration($builder)
             )
             ->nestedSchema(
-                fn (NestedSubBuilder $builder, NestedBuilder $parent) =>
-                $this->defaultNestedSchema($builder)
+                fn (NestedSubBuilder $builder, NestedBuilder $parent) => $this->defaultNestedSchema($builder)
             );
     }
 
@@ -93,7 +89,7 @@ class SQLNestedBuilder extends NestedBuilder
         $builder->blockNumbers(false); //$builder->getLevel() != 1);
         $builder->columnSpanFull(); // full width
         $builder->label('Query (WHERE)');
-        $builder->hint(function (?array $state) use ($builder) {
+        $builder->hint(function (?array $state) {
             return self::getFullyLinearizedArrayToSQL($state) ?: 'No filter yet';
         });
         $builder->addActionLabel('Add a new WHERE');
@@ -131,7 +127,7 @@ class SQLNestedBuilder extends NestedBuilder
                                     Select::make('condition')
                                         ->options([
                                             'AND' => 'AND',
-                                            'OR'  => 'OR'
+                                            'OR' => 'OR',
                                         ])
                                         ->default('and')
                                         ->required()
@@ -141,10 +137,9 @@ class SQLNestedBuilder extends NestedBuilder
                                     Checkbox::make('not')
                                         ->label('not')
                                         ->live()
-                                        ->columnSpanFull()
+                                        ->columnSpanFull(),
                                 ])
                                 ->columnSpan(2),
-
 
                             $builder->importNestedBlocks('children')
                                 ->label(false)
@@ -175,7 +170,7 @@ class SQLNestedBuilder extends NestedBuilder
                         ->hintIcon(function ($get) {
                             $sign = $get('operator');
                             if ($this->hasOperator($sign)) {
-                                return !empty($this->getOperator($sign)::getHint()) ? 'heroicon-m-question-mark-circle' : null;
+                                return ! empty($this->getOperator($sign)::getHint()) ? 'heroicon-m-question-mark-circle' : null;
                             }
                         }, function ($get) {
                             $sign = $get('operator');
@@ -185,7 +180,7 @@ class SQLNestedBuilder extends NestedBuilder
                         })
                         ->live(),
                 ])
-                ->columns(6)
+                ->columns(6),
         ];
     }
 
@@ -209,26 +204,29 @@ class SQLNestedBuilder extends NestedBuilder
                 }
 
                 return implode(' AND ', $sql);
+
                 break;
 
             case 'group':
 
                 $not = $array['not'] ?? false;
 
-                if (!isset($array['children'])) {
+                if (! isset($array['children'])) {
                     return;
                 }
 
-                $children = (array)($array['children'] ?? []);
+                $children = (array) ($array['children'] ?? []);
                 foreach ($children as $key => $child) {
                     $sql[] = $this->getLinearizedArrayToSQL($child['type'], $child['data']);
                 }
                 $condition = ($array['condition'] ?? '') ?: '??';
+
                 return ($not ? 'NOT ' : '') . '(' . implode(' ' . $condition . ' ', $sql) . ')';
+
                 break;
 
             case 'rule':
-                if (!isset($array['field'])) {
+                if (! isset($array['field'])) {
                     return null;
                 }
 
@@ -250,9 +248,9 @@ class SQLNestedBuilder extends NestedBuilder
         return null;
     }
 
-    static public function getFullyLinearizedArrayToSQL(?array $state): string
+    public static function getFullyLinearizedArrayToSQL(?array $state): string
     {
-        return (static::make(''))->getLinearizedArrayToSQL('sql', $state);
+        return static::make('')->getLinearizedArrayToSQL('sql', $state);
     }
 
     public function getLinearizedArrayToEloquent(?array $state, EloquentBuilder $queryBuilder, $operator = 'and'): EloquentBuilder
@@ -270,6 +268,7 @@ class SQLNestedBuilder extends NestedBuilder
                         fn ($query) => $this
                             ->getLinearizedArrayToEloquent($children, $query, $child['data']['condition'])
                     );
+
                     break;
 
                 case 'rule':
@@ -283,6 +282,7 @@ class SQLNestedBuilder extends NestedBuilder
                             )
                         );
                     }
+
                     break;
             }
         }
@@ -290,12 +290,11 @@ class SQLNestedBuilder extends NestedBuilder
         return $queryBuilder;
     }
 
-    static public function getFullyLinearizedArrayToEloquent(?array $state, EloquentBuilder $queryBuilder): EloquentBuilder
+    public static function getFullyLinearizedArrayToEloquent(?array $state, EloquentBuilder $queryBuilder): EloquentBuilder
     {
         return $queryBuilder
             ->where(
-                fn ($query)
-                => (static::make(''))->getLinearizedArrayToEloquent($state, $query)
+                fn ($query) => (static::make(''))->getLinearizedArrayToEloquent($state, $query)
             );
     }
 }
