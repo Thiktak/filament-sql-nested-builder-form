@@ -1,6 +1,6 @@
 <?php
 
-namespace Thiktak\FilamentNestedBuilderForm\Forms\Operators;
+namespace Thiktak\FilamentSQLNestedBuilderForm\Forms\Operators;
 
 class BeginWithOperator extends ContainsStringOperator
 {
