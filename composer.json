@@ -47,9 +47,7 @@
         }
     },
     "autoload-dev": {
-        "psr-4": {
-            "Thiktak\\FilamentSQLNestedBuilderForm\\Tests\\": "tests/"
-        }
+        "psr-4": {}
     },
     "scripts": {
         "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
