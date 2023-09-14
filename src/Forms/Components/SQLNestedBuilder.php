@@ -170,7 +170,7 @@ class SQLNestedBuilder extends NestedBuilder
                         ->hintIcon(function ($get) {
                             $sign = $get('operator');
                             if ($this->hasOperator($sign)) {
-                                return ! empty($this->getOperator($sign)::getHint()) ? 'heroicon-m-question-mark-circle' : null;
+                                return !empty($this->getOperator($sign)::getHint()) ? 'heroicon-m-question-mark-circle' : null;
                             }
                         }, function ($get) {
                             $sign = $get('operator');
@@ -211,7 +211,7 @@ class SQLNestedBuilder extends NestedBuilder
 
                 $not = $array['not'] ?? false;
 
-                if (! isset($array['children'])) {
+                if (!isset($array['children'])) {
                     return;
                 }
 
@@ -226,7 +226,7 @@ class SQLNestedBuilder extends NestedBuilder
                 break;
 
             case 'rule':
-                if (! isset($array['field'])) {
+                if (!isset($array['field'])) {
                     return null;
                 }
 

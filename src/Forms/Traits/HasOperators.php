@@ -2,7 +2,7 @@
 
 namespace Thiktak\FilamentSQLNestedBuilderForm\Forms\Traits;
 
-use Thiktak\FilamentNestedBuilderForm\Forms\Operators\Operator;
+use Thiktak\FilamentSQLNestedBuilderForm\Forms\Operators\Operator;
 
 trait HasOperators
 {
