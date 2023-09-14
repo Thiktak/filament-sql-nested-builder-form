@@ -53,7 +53,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [Thiktak](https://github.com/Thiktak)
 - [All Contributors](../../contributors)
 
 ## License
